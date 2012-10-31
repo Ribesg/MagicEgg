@@ -79,7 +79,7 @@ public class EnchantmentRandomizer {
             final float luck = nbEnchant == 1 ? 0.95f : nbEnchant == 2 ? 0.90f : nbEnchant == 3 ? 0.85f : 0.75f;
             for (final Entry<Enchantment, Integer> entry : i.getEnchantments().entrySet()) {
                 final float randVal = this.rand.nextFloat();
-                if (randVal >= luck) {
+                if (randVal <= luck) {
                     if (entry.getValue() <= 7) {
                         i.addUnsafeEnchantment(entry.getKey(), entry.getValue() + ((int) (randVal * 100) % 2 == 0 ? 3 : 2));
                     }
