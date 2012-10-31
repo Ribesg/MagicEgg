@@ -1,0 +1,8 @@
+# Plugin created for the Itsn3w French Community @ www.itsnew.fr
+name: MagicEgg
+author: Ribesg
+website: www.itsnew.fr
+main: com.github.ribesg.magicegg.MagicEgg
+version: 0.01
+description: Renforce enchantments with DragonEgg and Cauldrons
+load: POSTWORLD
