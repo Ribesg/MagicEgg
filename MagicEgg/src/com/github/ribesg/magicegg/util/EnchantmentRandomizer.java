@@ -16,6 +16,7 @@ public class EnchantmentRandomizer {
     }
 
     private final Set<Integer> goldItems = new HashSet<Integer>();
+    private final Set<Integer> ironItems = new HashSet<Integer>();
 
     private final Random       rand      = new Random(new Random().nextLong());
 
@@ -40,6 +41,15 @@ public class EnchantmentRandomizer {
         this.goldItems.add(315);
         this.goldItems.add(316);
         this.goldItems.add(317);
+
+        this.ironItems.add(256);
+        this.ironItems.add(257);
+        this.ironItems.add(258);
+        this.ironItems.add(267);
+        this.ironItems.add(306);
+        this.ironItems.add(307);
+        this.ironItems.add(308);
+        this.ironItems.add(309);
     }
 
     public Result randomize(final ItemStack i) {
@@ -47,6 +57,11 @@ public class EnchantmentRandomizer {
         float val = this.rand.nextFloat();
         if (this.goldItems.contains(i.getTypeId())) {
             val += this.cleanEnchThreshold;
+            if (val > 1) {
+                val = 1;
+            }
+        } else if (this.ironItems.contains(i.getTypeId())) {
+            val += this.cleanEnchThreshold / 2.0;
             if (val > 1) {
                 val = 1;
             }
