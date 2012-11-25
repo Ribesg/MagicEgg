@@ -29,6 +29,18 @@ public class ME_Listener implements Listener {
         } else if (type == Material.DRAGON_EGG && b.getRelative(BlockFace.UP).getType() == Material.CAULDRON && this.plugin.magicBenches.contains(b.getRelative(BlockFace.UP).getLocation())) {
             this.plugin.magicBenches.remove(b.getRelative(BlockFace.UP).getLocation());
         }
+        // ------------------------------------------------------------- //
+        // "FIX" FOR 1.4 BUG OF CAULDRON NO LONGER ABLE TO CONTAIN ITEMS //
+        // ------------------------------------------------------------- //
+        else if (type == Material.STEP && b.getData() == (byte) 4 && b.getRelative(BlockFace.DOWN).getType() == Material.DRAGON_EGG && !this.plugin.magicBenches.contains(b.getLocation())) {
+            this.plugin.magicBenches.remove(b.getLocation());
+        } else if (type == Material.DRAGON_EGG && b.getRelative(BlockFace.UP).getType() == Material.STEP && b.getRelative(BlockFace.UP).getData() == (byte) 4
+                && !this.plugin.magicBenches.contains(b.getRelative(BlockFace.UP).getLocation())) {
+            this.plugin.magicBenches.remove(b.getRelative(BlockFace.UP).getLocation());
+        }
+        // ---------- //
+        // END OF FIX //
+        // ---------- //
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -40,15 +52,38 @@ public class ME_Listener implements Listener {
         } else if (type == Material.DRAGON_EGG && b.getRelative(BlockFace.UP).getType() == Material.CAULDRON && !this.plugin.magicBenches.contains(b.getRelative(BlockFace.UP).getLocation())) {
             this.plugin.magicBenches.add(b.getRelative(BlockFace.UP).getLocation());
         }
+        // ------------------------------------------------------------- //
+        // "FIX" FOR 1.4 BUG OF CAULDRON NO LONGER ABLE TO CONTAIN ITEMS //
+        // ------------------------------------------------------------- //
+        else if (type == Material.STEP && b.getData() == (byte) 4 && b.getRelative(BlockFace.DOWN).getType() == Material.DRAGON_EGG && !this.plugin.magicBenches.contains(b.getLocation())) {
+            this.plugin.magicBenches.add(b.getLocation());
+        } else if (type == Material.DRAGON_EGG && b.getRelative(BlockFace.UP).getType() == Material.STEP && b.getRelative(BlockFace.UP).getData() == (byte) 4
+                && !this.plugin.magicBenches.contains(b.getRelative(BlockFace.UP).getLocation())) {
+            this.plugin.magicBenches.add(b.getRelative(BlockFace.UP).getLocation());
+        }
+        // ---------- //
+        // END OF FIX //
+        // ---------- //
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerInteract(final PlayerInteractEvent event) {
         final Action a = event.getAction();
         if (a.equals(Action.RIGHT_CLICK_BLOCK) || a.equals(Action.LEFT_CLICK_BLOCK)) {
-            final Material type = event.getClickedBlock().getType();
-            if (type == Material.DRAGON_EGG) {
-                event.setCancelled(event.getClickedBlock().getRelative(BlockFace.UP).getType() == Material.CAULDRON);
+            if (event.getClickedBlock().getType() == Material.DRAGON_EGG) {
+                final Block b = event.getClickedBlock().getRelative(BlockFace.UP);
+                if (b.getType() == Material.CAULDRON) {
+                    event.setCancelled(true);
+                }
+                // ------------------------------------------------------------- //
+                // "FIX" FOR 1.4 BUG OF CAULDRON NO LONGER ABLE TO CONTAIN ITEMS //
+                // ------------------------------------------------------------- //
+                else if (b.getType() == Material.STEP && b.getData() == (byte) 4) {
+                    event.setCancelled(true);
+                }
+                // ---------- //
+                // END OF FIX //
+                // ---------- //
             }
         }
     }

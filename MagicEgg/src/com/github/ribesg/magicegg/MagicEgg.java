@@ -27,22 +27,28 @@ import com.github.ribesg.magicegg.util.ItemEnchantingTask;
 
 public class MagicEgg extends JavaPlugin {
 
-    private final String                              directory        = "plugins" + File.separator + "MagicEgg";
-    private final File                                f_config         = new File(this.directory + File.separator + "config.yml");
-    private final File                                f_magicBenchesDB = new File(this.directory + File.separator + "magicBenchesDB.yml");
+    private String                              directory;
+    private File                                f_config;
+    private File                                f_magicBenchesDB;
 
-    private final long                                period           = 60;
+    private final long                          period = 60;
 
     // Data
-    public final ConcurrentNavigableMap<String, Item> buffer           = new ConcurrentSkipListMap<String, Item>();                       // Items spotted in cauldrons
-    public final CopyOnWriteArrayList<Location>       magicBenches     = new CopyOnWriteArrayList<Location>();                            // Location of cauldrons
+    public ConcurrentNavigableMap<String, Item> buffer;          // Items spotted in cauldrons
+    public CopyOnWriteArrayList<Location>       magicBenches;    // Location of cauldrons
 
     // Tools
-    public EnchantmentRandomizer                      randomizer;
-    private final ME_Listener                         listener         = new ME_Listener(this);
+    public EnchantmentRandomizer                randomizer;
+    private ME_Listener                         listener;
 
     @Override
     public void onEnable() {
+        this.directory = "plugins" + File.separator + "MagicEgg";
+        this.f_config = new File(this.directory + File.separator + "config.yml");
+        this.f_magicBenchesDB = new File(this.directory + File.separator + "magicBenchesDB.yml");
+        this.buffer = new ConcurrentSkipListMap<String, Item>();
+        this.magicBenches = new CopyOnWriteArrayList<Location>();
+        this.listener = new ME_Listener(this);
         if (!new File(this.directory).exists()) {
             new File(this.directory).mkdir();
         }

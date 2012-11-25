@@ -6,6 +6,7 @@ import java.util.ConcurrentModificationException;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 
 import com.github.ribesg.magicegg.MagicEgg;
@@ -40,13 +41,27 @@ public class ItemCheckerTask implements Runnable {
                 }
                 for (final Item i : this.items) {
                     if (i.isValid()) {
-                        if (i.getWorld().getBlockTypeIdAt(i.getLocation()) == 118) { // Cauldron
+                        final Block b = i.getWorld().getBlockAt(i.getLocation());
+                        if (b.getTypeId() == 118) { // Cauldron
                             final Location blockLocation = i.getWorld().getBlockAt(i.getLocation()).getLocation();
                             if (!this.plugin.buffer.containsValue(i) && !this.plugin.buffer.containsKey(blockLocation.toString())) {
                                 this.plugin.buffer.put(blockLocation.toString(), i);
                                 i.setPickupDelay(100);
                             }
                         }
+                        // ------------------------------------------------------------- //
+                        // "FIX" FOR 1.4 BUG OF CAULDRON NO LONGER ABLE TO CONTAIN ITEMS //
+                        // ------------------------------------------------------------- //
+                        else if (b.getTypeId() == 44 && b.getData() == (byte) 4) { // Brick slab
+                            final Location blockLocation = i.getWorld().getBlockAt(i.getLocation()).getLocation();
+                            if (!this.plugin.buffer.containsValue(i) && !this.plugin.buffer.containsKey(blockLocation.toString())) {
+                                this.plugin.buffer.put(blockLocation.toString(), i);
+                                i.setPickupDelay(100);
+                            }
+                        }
+                        // ---------- //
+                        // END OF FIX //
+                        // ---------- //
                     }
                 }
             }
