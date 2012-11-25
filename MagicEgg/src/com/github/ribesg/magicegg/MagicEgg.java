@@ -3,7 +3,10 @@ package com.github.ribesg.magicegg;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -16,8 +19,12 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import com.github.ribesg.magicegg.util.EnchantmentRandomizer;
@@ -96,6 +103,10 @@ public class MagicEgg extends JavaPlugin {
         this.save();
     }
 
+    // ---------------------- //
+    // Config related methods //
+    // ---------------------- //
+
     private void newConfig() {
         try {
             this.f_config.createNewFile();
@@ -173,5 +184,54 @@ public class MagicEgg extends JavaPlugin {
             e.printStackTrace();
             this.getPluginLoader().disablePlugin(this);
         }
+    }
+
+    // --------------------- //
+    // Tools & Utils methods //
+    // --------------------- //
+
+    public void fakeWool(final Location blockLocation, final byte woolData, final List<Player> nearbyPlayers) {
+        new BukkitRunnable() {
+            Random rand  = new Random();
+            int    loops = 30;
+
+            @Override
+            public void run() {
+                if (this.loops > 1) {
+                    byte b = woolData;
+                    while (b == woolData) {
+                        b = (byte) this.rand.nextInt(16);
+                    }
+                    for (final Player p : nearbyPlayers) {
+                        p.sendBlockChange(blockLocation, 35, b);
+                    }
+                    this.loops--;
+                } else {
+                    for (final Player p : nearbyPlayers) {
+                        p.sendBlockChange(blockLocation, 35, woolData);
+                    }
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(this, 1,1);
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                for (final Player p : nearbyPlayers) {
+                    p.sendBlockChange(blockLocation, 0, (byte) 0);
+                }
+            }
+        }.runTaskLater(this, 80);
+    }
+
+    public List<Player> getNearbyPlayers(final Entity e, final double x, final double y, final double z) {
+        final List<Player> result = new ArrayList<Player>();
+        for (final Entity nearbyEntity : e.getNearbyEntities(x, y, z)) {
+            if (nearbyEntity.getType() == EntityType.PLAYER) {
+                result.add((Player) nearbyEntity);
+            }
+        }
+        return result;
     }
 }
