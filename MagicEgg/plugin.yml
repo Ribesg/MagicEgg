@@ -3,6 +3,6 @@ name: MagicEgg
 author: Ribesg
 website: www.itsnew.fr
 main: com.github.ribesg.magicegg.MagicEgg
-version: 0.2
+version: 0.3
 description: Renforce enchantments with DragonEgg and Cauldrons
 load: POSTWORLD
