@@ -20,7 +20,7 @@ public class ME_Listener implements Listener {
         this.plugin = instance;
     }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockBreak(final BlockBreakEvent event) {
         final Block b = event.getBlock();
         final Material type = b.getType();
@@ -43,7 +43,7 @@ public class ME_Listener implements Listener {
         // ---------- //
     }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent event) {
         final Block b = event.getBlock();
         final Material type = b.getType();
@@ -66,7 +66,7 @@ public class ME_Listener implements Listener {
         // ---------- //
     }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerInteract(final PlayerInteractEvent event) {
         final Action a = event.getAction();
         if (a.equals(Action.RIGHT_CLICK_BLOCK) || a.equals(Action.LEFT_CLICK_BLOCK)) {
